@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Научный Поисковик - Шаблон Фронтенда</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Научный Поисковик (Шаблон Фронтенда)</h1>
+
+        <div class="search-area">
+            <h2>1. Основной Поиск</h2>
+
+            <div class="main-query-bar">
+                <input type="text" id="search-input" placeholder="Введите запрос, DOI, или URL статьи" required>
+                <button id="search-articles-btn" class="search-button">Искать статьи</button>
+            </div>
+
+            <h3>Настраиваемые фильтры</h3>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="filter-authors">Авторы (ФИО)</label>
+                    <input type="text" id="filter-authors" placeholder="Напр. Smith J., Ivanov P.">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-journal">Журнал / ISSN</label>
+                    <input type="text" id="filter-journal" placeholder="Напр. Nature, 0028-0836">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-title">Название статьи (Title)</label>
+                    <input type="text" id="filter-title" placeholder="Ключевые слова из заголовка">
+                </div>
+
+                <div class="filter-group">
+                    <label>Диапазон годов</label>
+                    <div class="year-range-group">
+                        <input type="number" id="filter-year-from" placeholder="С года (Напр. 2020)">
+                        <input type="number" id="filter-year-to" placeholder="По год (Напр. 2024)">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-entire-text">По всей статье</label>
+                    <input type="text" id="filter-entire-text" placeholder="Текст из основного тела статьи">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-abstract">Аннотация (Abstract)</label>
+                    <input type="text" id="filter-abstract" placeholder="Ключевые слова из аннотации">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-affiliation">Аффилиация</label>
+                    <input type="text" id="filter-affiliation" placeholder="Напр. Moscow State University">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-author-number">Число авторов</label>
+                    <input type="number" id="filter-author-number" placeholder="Точное или минимальное число">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-countries">Коллаборации (до 4 стран)</label>
+                    <input type="text" id="filter-countries" placeholder="Напр. Russia, China, USA (через запятую)">
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <h2>2. Результаты Поиска</h2>
+        <div id="results-container">
+            <p>Результаты появятся здесь после выполнения запроса. Таблица будет содержать колонки для сортировки.</p>
+
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th data-key="title">Название статьи</th>
+                        <th data-key="authors">Авторы</th>
+                        <th data-key="year">Год</th>
+                        <th data-key="journal">Журнал</th>
+                        <th data-key="publisher">Издатель (Скрыть/Показать)</th>
+                        <th data-key="citations">Цитирование</th>
+                        <th data-key="annual_citations">Среднегодовое цитирование</th>
+                        <th data-key="volume">Том</th>
+                        <th data-key="issue">Выпуск</th>
+                        <th data-key="author_count">Число авторов</th>
+                        <th data-key="countries">Страны (Rus, Chin/Rus)</th>
+                        <th data-key="doi">DOI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <div id="analysis-area">
+            <h2>3. 📊 Анализ DOI</h2>
+            <form id="analysis-form">
+                <div id="analysis-form-content">
+                    <input type="text" id="analysis-input" placeholder="Введите один или несколько DOI для анализа, разделенных запятой (напр., 10.1000/j.a.b, 10.2000/x.y.z)" required>
+                    <button type="submit" class="search-button" id="analyze-doi-btn">Анализировать DOI</button>
+                </div>
+            </form>
+
+            <div id="analysis-results">
+                <p>Результаты анализа появятся здесь.</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
