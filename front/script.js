@@ -2,9 +2,9 @@
 function collectSearchData() {
     return {
         query: document.getElementById('search-input').value.trim(),
-        authors: document.getElementById('filter-authors').value.trim(),
-        journal: document.getElementById('filter-journal').value.trim(),
-        title: document.getElementById('filter-title').value.trim(),
+        authors: document.getElementById('filter-authors').value.trim() || null,
+        journal: document.getElementById('filter-journal').value.trim() || null,
+        title: document.getElementById('filter-title').value.trim() || null,
         yearFrom: document.getElementById('filter-year-from').value.trim() || null,
         yearTo: document.getElementById('filter-year-to').value.trim() || null,
         text: document.getElementById('filter-entire-text').value.trim(),
@@ -46,7 +46,7 @@ function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
-    errorDiv.style.color = 'red';
+    errorDiv.style.color = 'black';
     errorDiv.style.margin = '10px 0';
     
     // Добавляем ошибку в контейнер результатов поиска
@@ -175,7 +175,7 @@ async function searchArticles() {
         showLoading(true, 'search-articles-btn');
         
         // Отправляем запрос
-        const response = await fetch('/api/search', {
+        const response = await fetch('/app/main.py', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -267,12 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = `
         .error-message {
-            color: red;
+            color: white;
             margin: 10px 0;
             padding: 10px;
-            border: 1px solid red;
+            border: 1px solid black;
             border-radius: 4px;
-            background-color: #ffe6e6;
+            background-color: #f7f7f7ff;
         }
     `;
     document.head.appendChild(style);
