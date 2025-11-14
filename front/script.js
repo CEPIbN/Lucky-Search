@@ -1,16 +1,34 @@
 // Функция для сбора данных из формы поиска статей
 function collectSearchData() {
+    // Получаем значение authorCount и разделяем на min и max
+    const authorCount = document.getElementById('filter-author-number').value.trim();
+    let authors_number_min = null;
+    let authors_number_max = null;
+    
+    if (authorCount) {
+        // Предполагаем, что значение может быть в формате "min-max" или просто число
+        if (authorCount.includes('-')) {
+            const parts = authorCount.split('-');
+            authors_number_min = parseInt(parts[0]) || null;
+            authors_number_max = parseInt(parts[1]) || null;
+        } else {
+            // Если одно число, используем его как минимальное значение
+            authors_number_min = parseInt(authorCount) || null;
+        }
+    }
+    
     return {
         query: document.getElementById('search-input').value.trim(),
         authors: document.getElementById('filter-authors').value.trim() || null,
         journal_title: document.getElementById('filter-journal').value.trim() || null,
         article_title: document.getElementById('filter-title').value.trim() || null,
         year_from: document.getElementById('filter-year-from').value.trim() || null,
-        year_from: document.getElementById('filter-year-to').value.trim() || null,
+        year_to: document.getElementById('filter-year-to').value.trim() || null,
         article_text: document.getElementById('filter-entire-text').value.trim(),
         abstract: document.getElementById('filter-abstract').value.trim(),
         affiliation: document.getElementById('filter-affiliation').value.trim(),
-        authorCount: document.getElementById('filter-author-number').value.trim() || null,
+        authors_number_min: authors_number_min,
+        authors_number_max: authors_number_max,
         collaboration_countries: document.getElementById('filter-countries').value.trim()
     };
 }
@@ -129,16 +147,16 @@ function displayDoiAnalysisResults(results) {
 // Функция для валидации данных поиска
 function validateSearchData(data) {
     // Проверяем, что хотя бы одно поле заполнено
-    const hasQuery = data.query || data.authors || data.journal || data.title || 
-                     data.yearFrom || data.yearTo || data.text || data.abstract || 
-                     data.affiliation || data.authorCount || data.countries;
+    const hasQuery = data.query || data.authors || data.journal_title || data.article_title ||
+                     data.year_from || data.year_to || data.article_text || data.abstract ||
+                     data.affiliation || data.authors_number_min || data.authors_number_max || data.collaboration_countries;
     
     if (!hasQuery) {
         throw new Error('Пожалуйста, заполните хотя бы одно поле для поиска');
     }
     
     // Проверяем корректность диапазона годов
-    if (data.yearFrom && data.yearTo && parseInt(data.yearFrom) > parseInt(data.yearTo)) {
+    if (data.year_from && data.year_to && parseInt(data.year_from) > parseInt(data.year_to)) {
         throw new Error('Год "С" не может быть больше года "По"');
     }
     
@@ -175,7 +193,7 @@ async function searchArticles() {
         showLoading(true, 'search-articles-btn');
         
         // Отправляем запрос
-        const response = await fetch('/app/main.py', {
+        const response = await fetch('/search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -213,7 +231,7 @@ async function analyzeDoi() {
         showLoading(true, 'analyze-doi-btn');
         
         // Отправляем запрос
-        const response = await fetch('/api/analyze-doi', {
+        const response = await fetch('/analyze/doi', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
