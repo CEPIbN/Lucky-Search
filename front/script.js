@@ -3,15 +3,15 @@ function collectSearchData() {
     return {
         query: document.getElementById('search-input').value.trim(),
         authors: document.getElementById('filter-authors').value.trim() || null,
-        journal: document.getElementById('filter-journal').value.trim() || null,
-        title: document.getElementById('filter-title').value.trim() || null,
-        yearFrom: document.getElementById('filter-year-from').value.trim() || null,
-        yearTo: document.getElementById('filter-year-to').value.trim() || null,
-        text: document.getElementById('filter-entire-text').value.trim(),
+        journal_title: document.getElementById('filter-journal').value.trim() || null,
+        article_title: document.getElementById('filter-title').value.trim() || null,
+        year_from: document.getElementById('filter-year-from').value.trim() || null,
+        year_from: document.getElementById('filter-year-to').value.trim() || null,
+        article_text: document.getElementById('filter-entire-text').value.trim(),
         abstract: document.getElementById('filter-abstract').value.trim(),
         affiliation: document.getElementById('filter-affiliation').value.trim(),
         authorCount: document.getElementById('filter-author-number').value.trim() || null,
-        countries: document.getElementById('filter-countries').value.trim()
+        collaboration_countries: document.getElementById('filter-countries').value.trim()
     };
 }
 
