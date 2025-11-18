@@ -1,137 +1,19 @@
 from enum import Enum
-from typing import Optional, List, Dict, Any
-from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
-from fastapi import FastAPI, Query, HTTPException
+from typing import List, Dict
+from pydantic import BaseModel, Field
+from fastapi import HTTPException, APIRouter
 
-app = FastAPI(
-    title="Academic Search API",
-    description="Расширенный поиск и анализ научных статей",
-    version="1.0.0"
-)
+from app.DTO.Request.SearchRequest import SearchRequest
+from app.DTO.Response.SearchResponse import SearchResponse, Article, Author
 
-
-class SearchField(str, Enum):
-    TITLE = "title"
-    JOURNAL = "journal"
-    AUTHORS = "authors"
-    ENTIRE_TEXT = "entire_text"
-    ABSTRACT = "abstract"
-
-
-class SortOrder(str, Enum):
-    ASC = "asc"
-    DESC = "desc"
-
-
-class SortField(str, Enum):
-    AUTHORS = "authors"
-    TITLE = "title"
-    YEAR = "year"
-    CITATIONS = "citations"
-    ANNUAL_CITATIONS = "annual_citations"
-    VOLUME = "volume"
-    ISSUE = "issue"
-    AUTHORS_COUNT = "authors_count"
-
+search_router = APIRouter()
 
 class JournalDisplayMode(str, Enum):
     FULL = "full"
     ABBREVIATION = "abbreviation"
 
-
-class SearchRequest(BaseModel):
-    # Основные параметры поиска
-    query: str = Query(..., description="Поисковый запрос"),
-    authors: Optional[str] = Field(None, description="Авторы (через запятую)")
-    journal_title: Optional[str] = Field(None, description="Название журнала")
-    issn: Optional[str] = Field(None, description="ISSN журнала")
-    article_title: Optional[str] = Field(None, description="Название статьи")
-    article_text: Optional[str] = Field(None, description="Поиск по всему тексту")
-
-    # Диапазон годов
-    year_from: Optional[int] = Field(None, ge=1900, le=datetime.now().year, description="Год от")
-    year_to: Optional[int] = Field(None, ge=1900, le=datetime.now().year, description="Год до")
-
-    # Дополнительные фильтры
-    abstract: Optional[str] = Field(None, description="Аннотация")
-    authors_number_min: Optional[int] = Field(None, ge=1, description="Минимальное число авторов")
-    authors_number_max: Optional[int] = Field(None, ge=1, description="Максимальное число авторов")
-    affiliation: Optional[str] = Field(None, description="Аффилиация")
-    collaboration_countries: Optional[List[str]] = Field(None, max_items=4, description="Коллаборации стран (макс. 4)")
-
-    # Параметры вывода
-    show_authors: bool = Field(True, description="Показывать авторов")
-    show_title: bool = Field(True, description="Показывать название статьи")
-    show_year: bool = Field(True, description="Показывать год")
-    show_journal: bool = Field(True, description="Показывать журнал")
-    show_publisher: bool = Field(True, description="Показывать издателя")
-    show_citations: bool = Field(True, description="Показывать цитирования")
-    show_annual_citations: bool = Field(True, description="Показывать среднегодовые цитирования")
-    show_volume: bool = Field(True, description="Показывать том")
-    show_issue: bool = Field(True, description="Показывать выпуск")
-    show_authors_count: bool = Field(True, description="Показывать число авторов")
-    show_countries: bool = Field(True, description="Показывать страны")
-    show_doi: bool = Field(True, description="Показывать DOI")
-
-    journal_display: JournalDisplayMode = Field(JournalDisplayMode.FULL, description="Формат отображения журнала")
-
-    # Сортировка
-    sort_by: SortField = Field(SortField.YEAR, description="Поле для сортировки")
-    sort_order: SortOrder = Field(SortOrder.DESC, description="Порядок сортировки")
-
-    page: int = Field(1, ge=1, description="Номер страницы")
-    page_size: int = Field(20, ge=1, le=100, description="Размер страницы")
-
-    @field_validator('collaboration_countries')
-    def validate_collaboration_countries(cls, v):
-        if v and len(v) > 4:
-            raise ValueError('Максимум 4 страны для коллаборации')
-        return v
-
-    @field_validator('year_to')
-    def validate_year_range(cls, v, values):
-        if 'year_from' in values and values['year_from'] and v:
-            if v < values['year_from']:
-                raise ValueError('Год "до" не может быть меньше года "от"')
-        return v
-
-
 class DOIAnalysisRequest(BaseModel):
-    dois: List[str] = Field(..., min_items=1, description="Список DOI для анализа")
-
-
-class Author(BaseModel):
-    name: str
-    surname: str
-    affiliation: Optional[str]
-    country: Optional[str]
-    ror_id: Optional[str]
-
-
-class CountryInfo(BaseModel):
-    code: str
-    name: str
-    organizations: List[str]
-
-
-class Article(BaseModel):
-    id: str
-    title: str
-    authors: List[Author]
-    year: int
-    journal_full: str
-    journal_abbreviation: str
-    publisher: str
-    citations: int
-    annual_citations: float
-    volume: Optional[str]
-    issue: Optional[str]
-    authors_count: int
-    countries: List[CountryInfo]
-    doi: str
-    abstract: Optional[str]
-    url: str
+    dois: List[str] = Field(default=[], min_length=1, description="Список DOI для анализа")
 
 class CitationAnalysis(BaseModel):
     doi: str
@@ -140,23 +22,11 @@ class CitationAnalysis(BaseModel):
     citations_by_journal: Dict[str, int]
     authors_frequency: Dict[str, int]
 
-
 class DOIAnalysisResponse(BaseModel):
     analyses: List[CitationAnalysis]
     total_articles: int
 
-
-class SearchResponse(BaseModel):
-    request: SearchRequest
-    articles: List[Article]
-    total_results: int
-    total_pages: int
-    current_page: int
-    page_size: int
-    search_time_ms: float
-
-
-@app.post("/search", response_model=SearchResponse, summary="Расширенный поиск статей")
+@search_router.post("/search", response_model=SearchResponse, summary="Расширенный поиск статей")
 async def search_articles(request: SearchRequest):
     """
     Расширенный поиск научных статей с фильтрацией по авторам, журналам, годам и другим параметрам.
@@ -224,8 +94,7 @@ async def search_articles(request: SearchRequest):
         search_time_ms=52.1
     )
 
-
-@app.post("/analyze/doi", response_model=DOIAnalysisResponse, summary="Анализ статей по DOI")
+@search_router.post("/analyze/doi", response_model=DOIAnalysisResponse, summary="Анализ статей по DOI")
 async def analyze_doi(request: DOIAnalysisRequest):
     """
     Анализ одной или нескольких статей по DOI с детальной статистикой цитирований.
