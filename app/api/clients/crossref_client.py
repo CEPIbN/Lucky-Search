@@ -10,18 +10,11 @@ class CrossrefClient:
         self.timeout = timeout
         self.client = httpx.AsyncClient(timeout=self.timeout)
 
-    async def search_works(self, query: str, rows: int = 10) -> List[Dict]:
-        """
-        Выполняет поиск по Crossref API и возвращает нормализованный список работ.
-        """
-        params = {
-            "query": query,
-            "rows": rows
-        }
+    async def search_works(self, query_params:dict) -> List[Dict]:
         try:
-            resp = await self.client.get(self.base_url, params=params)
-            resp.raise_for_status()
-            data = resp.json()
+            response = await self.client.get(self.base_url, params=query_params)
+            response.raise_for_status()
+            data = response.json()
             items = data.get("message", {}).get("items", [])
             return [self._normalize_item(item) for item in items]
         except httpx.HTTPError as e:

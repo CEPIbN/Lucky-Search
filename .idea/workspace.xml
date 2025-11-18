@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5866f6d-a0cb-4d35-910d-b4a3f8fb126a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/clients/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/clients/crossref_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/searching_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/routes/search_router.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/clients/openAlex_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/mappers/ModelParamMapper.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/mappers/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/clients/crossref_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clients/crossref_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/searching_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/searching_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/routes/search_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/search_router.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,24 +27,29 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="34hZwmqCrs51s4PB3WDRFVY6jnb" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dev"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev-api-client&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
