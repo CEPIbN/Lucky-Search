@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e5866f6d-a0cb-4d35-910d-b4a3f8fb126a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/api/clients/openAlex_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/mappers/ModelParamMapper.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/mappers/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/clients/crossref_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clients/crossref_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/searching_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/searching_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/search_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/search_router.py" afterDir="false" />
-    </list>
+    <list default="true" id="e5866f6d-a0cb-4d35-910d-b4a3f8fb126a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
