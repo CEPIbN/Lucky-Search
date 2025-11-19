@@ -1,26 +1,27 @@
+from app.DTO.Request.SearchRequest import SearchRequest
 
 class ModelParamsMapper:
     """Модуль для сопоставления входящих параметров с атрибутами OpenAlex и crossref API"""
 
     # Словарь маппинга: внешний_параметр -> openAlex_атрибут
 
-    FIELD_MAPPING = {
+    FILTER_FIELD_MAPPING = {
         # Основные поля поиска
-        'title': 'title_and_abstract.search',
-        'full_text': 'fulltext.search',
+        'article_title': 'title.search',
+        'article_text': 'fulltext.search',
         'doi': 'doi',
-        'orcid': 'authorships.author.orcid',
+        'abstract': 'abstract.search',
 
         # Авторы
         'author': 'authorships.author.display_name.search',
         'author_id': 'authorships.author.id',
-        'author_name': 'authorships.author.display_name.search',
+        'authors_count': 'authorships.author.works_count.search',
 
         # Организации
-        'institution': 'authorships.institutions.display_name.search',
+        'institution': 'authorships.institutions.display_name',
         'institution_id': 'authorships.institutions.id',
         'affiliation': 'authorships.institutions.display_name.search',
-        'country': 'authorships.institutions.country_code',
+        'collaboration_countries': 'authorships.institutions.country_code',
 
         # Временные периоды
         'year': 'publication_year',
@@ -29,7 +30,7 @@ class ModelParamsMapper:
         'publication_year': 'publication_year',
 
         # Журналы/источники
-        'journal': 'primary_location.source.display_name.search',
+        'journal_title': 'primary_location.source.display_name',
         'journal_id': 'primary_location.source.id',
         'issn': 'primary_location.source.issn',
         'publisher': 'primary_location.source.host_organization.name',
@@ -59,20 +60,32 @@ class ModelParamsMapper:
         openalex_params = dict()
         filter_str = []
         for user_key, value in user_params.items():
-            if user_key in cls.FIELD_MAPPING:
-                filter_str.append(f"{cls.FIELD_MAPPING.get(user_key)}:{value}")
+            if user_key in cls.FILTER_FIELD_MAPPING:
+                filter_str.append(cls.map_filter(user_key, value))
             elif user_key in cls.DIRECT_PARAMS:
                 openalex_params[user_key] = value
 
+        openalex_params["filter"] = ','.join(filter_str)
         return openalex_params
 
     @classmethod
-    def map_from_model(cls, model_instance):
-        # Получаем словарь, исключая None значения
-        if hasattr(model_instance, 'model_dump'):
-            user_params = model_instance.model_dump(exclude_none=True)
-        else:
-            user_params = model_instance.dict(exclude_none=True)
-
+    def map_from_model(cls, model_instance: SearchRequest):
+        user_params = model_instance.model_dump(exclude_none=True)
         user_params["search"] = user_params.get("query")
         return cls.map_parameters(user_params)
+
+    @classmethod
+    def map_filter(cls, key: str, filter_str: str):
+        if key.endswith("year"):
+            filter_str = cls.map_date(key, int(filter_str))
+        filters = [item.strip()
+                   for item in filter_str.split(',')
+                   if item.strip()]
+        return f"{cls.FILTER_FIELD_MAPPING.get(key)}:{'|'.join(filters)}"
+
+    @classmethod
+    def map_date(cls , key: str, year: int):
+        if key.startswith("from"):
+            return f"{year}-01-01"
+        return f"{year}-12-31"
+

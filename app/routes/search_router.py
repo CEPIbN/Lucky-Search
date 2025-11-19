@@ -1,12 +1,13 @@
 from enum import Enum
 from typing import List, Dict
 from pydantic import BaseModel, Field
-from fastapi import HTTPException, APIRouter
+from fastapi import APIRouter
 
 from app.DTO.Request.SearchRequest import SearchRequest
 from app.DTO.Response.SearchResponse import SearchResponse, Article, Author
+from app.api.searching_service import main
 
-search_router = APIRouter()
+search_router = APIRouter(prefix="/api/v1/search")
 
 class JournalDisplayMode(str, Enum):
     FULL = "full"
@@ -26,25 +27,11 @@ class DOIAnalysisResponse(BaseModel):
     analyses: List[CitationAnalysis]
     total_articles: int
 
-@search_router.post("/search", response_model=SearchResponse, summary="Расширенный поиск статей")
+@search_router.post("/", response_model=SearchResponse, summary="Расширенный поиск статей")
 async def search_articles(request: SearchRequest):
     """
     Расширенный поиск научных статей с фильтрацией по авторам, журналам, годам и другим параметрам.
     """
-    # Валидация параметров
-    if request.year_from and request.year_to and request.year_from > request.year_to:
-        raise HTTPException(
-            status_code=400,
-            detail="Год 'от' не может быть больше года 'до'"
-        )
-
-    if (request.authors_number_min and request.authors_number_max and
-            request.authors_number_min > request.authors_number_max):
-        raise HTTPException(
-            status_code=400,
-            detail="Минимальное число авторов не может быть больше максимального"
-        )
-
     mock_articles = [
         Article(
             id="10.1234/example.2023",
@@ -84,6 +71,8 @@ async def search_articles(request: SearchRequest):
         )
     ]
 
+    result = await main(request)
+    """"
     return SearchResponse(
         request=request,
         articles=mock_articles,
@@ -93,6 +82,8 @@ async def search_articles(request: SearchRequest):
         page_size=request.page_size,
         search_time_ms=52.1
     )
+    """""
+    return result
 
 @search_router.post("/analyze/doi", response_model=DOIAnalysisResponse, summary="Анализ статей по DOI")
 async def analyze_doi(request: DOIAnalysisRequest):
