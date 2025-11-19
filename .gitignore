@@ -1,3 +1,5 @@
 .venv/
 /.vs/Lucky-search/FileContentIndex
 /.vs/slnx.sqlite
+__pycache__/
+*/__pycache__/
