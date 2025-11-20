@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e5866f6d-a0cb-4d35-910d-b4a3f8fb126a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/DTO/Request/SearchRequest.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DTO/Request/SearchRequest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/mappers/ModelParamMapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/mappers/ModelParamMapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/searching_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/searching_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routes/search_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routes/search_router.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,13 +38,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev-api-client&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "dev-api-client"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

@@ -59,15 +59,17 @@ class SearchRequest(BaseModel):
     page: int = Field(1, ge=1, description="Номер страницы")
     page_size: int = Field(20, ge=1, le=100, description="Размер страницы")
 
-    @classmethod
+
     @field_validator('collaboration_countries')
+    @classmethod
     def validate_collaboration_countries(cls, v):
         if v and len(v) > 4:
             raise ValueError('Максимум 4 страны для коллаборации')
         return v
 
     @field_validator('year_to')
-    def validate_year_range(self, v, values):
+    @classmethod
+    def validate_year_range(cls, v, values):
         if v < values['year_from']:
                 raise ValueError('Год "до" не может быть меньше года "от"')
         return v
