@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from fastapi import APIRouter
+from fastapi.staticfiles import StaticFiles
 from starlette.responses import HTMLResponse
 
 router = APIRouter()
@@ -10,6 +11,10 @@ ROUTE_DIR = Path(__file__).parent
 APP_DIR = ROUTE_DIR.parent
 PROJECT_ROOT = APP_DIR.parent
 HTML_DIR = PROJECT_ROOT / "front"
+
+# Подключение статических файлов
+router.mount("/static", StaticFiles(directory=HTML_DIR), name="static")
+
 @router.get("/", response_class=HTMLResponse)
 async def root():
     #return {"message": "Hello, I'm Lucky-Search Service! See you later"}
