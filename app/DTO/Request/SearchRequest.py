@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
 def current_year():
     return datetime.now().year
@@ -69,7 +69,7 @@ class SearchRequest(BaseModel):
 
     @field_validator('year_to')
     @classmethod
-    def validate_year_range(cls, v, values):
-        if v < values['year_from']:
-                raise ValueError('Год "до" не может быть меньше года "от"')
+    def validate_year_range(cls, v, info: ValidationInfo):
+        if v is not None and info.data.get('year_from') is not None and v < info.data['year_from']:
+            raise ValueError('Год "до" не может быть меньше года "от"')
         return v

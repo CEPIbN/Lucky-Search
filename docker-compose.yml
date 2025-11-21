@@ -9,4 +9,5 @@ services:
       - "80:8000"
     volumes:
       - ./app:/app/app
+      - ./front:/app/front
     restart: always

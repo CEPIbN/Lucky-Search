@@ -2,19 +2,27 @@
 function collectSearchData() {
     // Получаем значение authorCount и разделяем на min и max
     const authorCount = document.getElementById('filter-author-number').value.trim();
-    let authors_number_min = null;
-    let authors_number_max = null;
+    let authors_count = null;
     
     if (authorCount) {
         // Предполагаем, что значение может быть в формате "min-max" или просто число
         if (authorCount.includes('-')) {
             const parts = authorCount.split('-');
-            authors_number_min = parseInt(parts[0]) || null;
-            authors_number_max = parseInt(parts[1]) || null;
+            // Для DTO используем минимальное значение как authors_count
+            authors_count = parseInt(parts[0]) || null;
         } else {
-            // Если одно число, используем его как минимальное значение
-            authors_number_min = parseInt(authorCount) || null;
+            // Если одно число, используем его как authors_count
+            authors_count = parseInt(authorCount) || null;
         }
+    }
+    
+    // Получаем страны коллаборации и преобразуем в массив
+    const countriesValue = document.getElementById('filter-countries').value.trim();
+    let collaboration_countries = [];
+    if (countriesValue) {
+        collaboration_countries = countriesValue.split(',')
+            .map(country => country.trim())
+            .filter(country => country.length > 0);
     }
     
     return {
@@ -27,9 +35,8 @@ function collectSearchData() {
         article_text: document.getElementById('filter-entire-text').value.trim(),
         abstract: document.getElementById('filter-abstract').value.trim(),
         affiliation: document.getElementById('filter-affiliation').value.trim(),
-        authors_number_min: authors_number_min,
-        authors_number_max: authors_number_max,
-        collaboration_countries: document.getElementById('filter-countries').value.trim()
+        authors_count: authors_count,
+        collaboration_countries: collaboration_countries
     };
 }
 
@@ -79,11 +86,11 @@ function showError(message) {
 }
 
 // Функция для отображения результатов поиска в таблице
-function displaySearchResults(results) {
+function displaySearchResults(articles) {
     const tbody = document.querySelector('#results-table tbody');
     tbody.innerHTML = ''; // Очищаем таблицу
     
-    if (!results || results.length === 0) {
+    if (!articles || articles.length === 0) {
         const row = tbody.insertRow();
         const cell = row.insertCell(0);
         cell.colSpan = 12;
@@ -93,22 +100,22 @@ function displaySearchResults(results) {
     }
     
     // Заполняем таблицу результатами
-    results.forEach(article => {
+    articles.forEach(article => {
         const row = tbody.insertRow();
         
         // Создаем ячейки в порядке, соответствующем заголовкам таблицы
         const fields = [
             article.title || '',
-            article.authors || '',
+            (article.authors && Array.isArray(article.authors)) ? article.authors.map(a => `${a.name} ${a.surname}`).join(', ') : '',
             article.year || '',
-            article.journal || '',
+            article.journal_full || '',
             article.publisher || '',
             article.citations || '',
             article.annual_citations || '',
             article.volume || '',
             article.issue || '',
-            article.author_count || '',
-            article.countries || '',
+            article.authors_count || '',
+            (article.countries && Array.isArray(article.countries)) ? article.countries.map(c => c.name).join(', ') : '',
             article.doi || ''
         ];
         
@@ -193,7 +200,7 @@ async function searchArticles() {
         showLoading(true, 'search-articles-btn');
         
         // Отправляем запрос
-        const response = await fetch('/search', {
+        const response = await fetch('/api/v1/search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -208,7 +215,7 @@ async function searchArticles() {
         const results = await response.json();
         
         // Отображаем результаты
-        displaySearchResults(results);
+        displaySearchResults(results.articles);
     } catch (error) {
         console.error('Ошибка при поиске статей:', error);
         showError(error.message);
@@ -231,7 +238,7 @@ async function analyzeDoi() {
         showLoading(true, 'analyze-doi-btn');
         
         // Отправляем запрос
-        const response = await fetch('/analyze/doi', {
+        const response = await fetch('/api/v1/search/analyze/doi', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

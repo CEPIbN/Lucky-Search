@@ -61,26 +61,55 @@ class ModelParamsMapper:
         filter_str = []
         for user_key, value in user_params.items():
             if user_key in cls.FILTER_FIELD_MAPPING:
-                filter_str.append(cls.map_filter(user_key, value))
+                filter_result = cls.map_filter(user_key, value)
+                # Добавляем фильтр только если он не пустой
+                if filter_result:
+                    filter_str.append(filter_result)
             elif user_key in cls.DIRECT_PARAMS:
                 openalex_params[user_key] = value
 
-        openalex_params["filter"] = ','.join(filter_str)
+        # Добавляем фильтр только если есть непустые фильтры
+        if filter_str:
+            openalex_params["filter"] = ','.join(filter_str)
         return openalex_params
 
     @classmethod
     def map_from_model(cls, model_instance: SearchRequest):
         user_params = model_instance.model_dump(exclude_none=True)
-        user_params["search"] = user_params.get("query")
+        # Добавляем поисковый запрос в параметры
+        query = user_params.get("query", "")
+        if query:
+            user_params["search"] = query
+        elif not any(key in user_params for key in cls.FILTER_FIELD_MAPPING.keys()):
+            # Если нет ни поискового запроса, ни фильтров, используем пустой search
+            user_params["search"] = ""
         return cls.map_parameters(user_params)
 
     @classmethod
-    def map_filter(cls, key: str, filter_str: str):
-        if key.endswith("year"):
-            filter_str = cls.map_date(key, int(filter_str))
-        filters = [item.strip()
-                   for item in filter_str.split(',')
-                   if item.strip()]
+    def map_filter(cls, key: str, filter_value):
+        # Обрабатываем список (например, collaboration_countries)
+        if isinstance(filter_value, list):
+            # Фильтруем пустые значения
+            filters = [item.strip() for item in filter_value if item and item.strip()]
+            # Если список пустой, возвращаем пустую строку
+            if not filters:
+                return ""
+        # Обрабатываем строку (стандартный случай)
+        elif isinstance(filter_value, str):
+            if key.endswith("year"):
+                filter_value = cls.map_date(key, int(filter_value))
+            # Фильтруем пустые значения
+            filters = [item.strip() for item in filter_value.split(',') if item and item.strip()]
+            # Если список пустой, возвращаем пустую строку
+            if not filters:
+                return ""
+        # Обрабатываем другие типы (числа и т.д.)
+        else:
+            # Проверяем, что значение не None
+            if filter_value is None:
+                return ""
+            filters = [str(filter_value)]
+            
         return f"{cls.FILTER_FIELD_MAPPING.get(key)}:{'|'.join(filters)}"
 
     @classmethod
@@ -88,4 +117,3 @@ class ModelParamsMapper:
         if key.startswith("from"):
             return f"{year}-01-01"
         return f"{year}-12-31"
-
