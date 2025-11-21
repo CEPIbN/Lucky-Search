@@ -1,22 +1,22 @@
 body {
-    font-family: 'Times New Roman', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #ffffff;
-    color: #333;
+    background-color: #fdbdba;
+    color: #000000;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    background: #fffbfb;
+    background: #fadadd;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #0056b3;
+    color: #000000;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -46,7 +46,7 @@ h1 {
 
 .search-button {
     padding: 12px 20px;
-    background-color: #007bff;
+    background-color: #256d7b;
     color: white;
     border: none;
     border-radius: 4px;
@@ -109,7 +109,7 @@ h1 {
     }
 
     #results-table th {
-        background-color: #e9ecef;
+        background-color: #f3ddf3;
         cursor: pointer;
         position: relative;
     }
@@ -119,13 +119,13 @@ h1 {
 }
 
 .doi-link {
-    color: #007bff;
+    color: #f0f8ff;
     text-decoration: none;
 }
 
 #analysis-area {
     margin-top: 50px;
-    border-top: 2px solid #28a745;
+    border-top: 2px solid #fadadd;
     padding-top: 20px;
 }
 
@@ -140,5 +140,5 @@ h1 {
     background-color: #f7fff9;
     padding: 15px;
     border-radius: 6px;
-    border-left: 5px solid #28a745;
+    border-left: 5px solid #feb8f9;
 }
