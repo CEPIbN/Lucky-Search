@@ -1,28 +1,55 @@
 import httpx
 from typing import List, Dict
-from app.DTO.Response.SearchResponse import Article, Author, CountryInfo
 
 BASE_URL = "https://api.openalex.org/works"
 
 class OpenAlexClient:
-    def __init__(self, timeout: int = 10):
+    def __init__(self, timeout: int = 30):
         self.base_url = BASE_URL
         self.timeout = timeout
         self.client = httpx.AsyncClient(timeout=self.timeout)
 
     async def search_works(self, query_params:dict) -> List[Dict]:
         try:
-            # Удаляем пустые параметры
-            filtered_params = {k: v for k, v in query_params.items() if v is not None and v != ""}
-            
-            response = await self.client.get(self.base_url, params=filtered_params)
+            response = await self.client.get(self.base_url, params=query_params)
+            print(response.url)
             response.raise_for_status()
             data = response.json()
             items = data.get("results", [])
             return [self._normalize_item(item) for item in items]
+
+        except httpx.HTTPStatusError as e:
+            # Ошибки статуса (4xx, 5xx)
+            print(f"Ошибка статуса HTTP: {e.response.status_code}")
+            print(f"URL: {e.request.url}")
+            print(f"Тело ответа: {e.response.text}")
+            return []
+
+        except httpx.ConnectTimeout:
+            # Таймаут подключения
+            print("Не удалось подключиться к серверу: таймаут")
+            return []
+
+        except httpx.ReadTimeout as e:
+            # Таймаут чтения данных
+            print("Сервер не ответил вовремя: таймаут чтения")
+            print(f"URL: {e.request.url}")
+            return []
+
+        except httpx.ConnectError as e:
+            # Ошибки подключения (DNS, сеть и т.д.)
+            print(f"Ошибка подключения: {e}")
+            return []
+
+        except httpx.RequestError as e:
+            # Общие ошибки запроса
+            print(f"Ошибка при выполнении запроса: {e}")
+            return []
+
         except httpx.HTTPError as e:
             print(f"[OpenAlexClient] HTTP error: {e}")
             return []
+
         except Exception as e:
             print(f"[OpenAlexClient] Unexpected error: {e}")
             return []
@@ -49,7 +76,7 @@ class OpenAlexClient:
             # Журнал
             'journal': source.get('display_name', ''),
             'journal_abbreviation': source.get('abbreviated_title', ''),
-            'publisher': source.get('host_organization_name', ''),
+            'publisher': source.get('host_organization.name', ''),
             
             # Цитирование
             'cited_by_count': cited_by_count,

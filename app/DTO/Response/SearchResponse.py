@@ -28,9 +28,9 @@ class Article(BaseModel):
     issue: Optional[str]
     authors_count: int
     countries: List[CountryInfo]
-    doi: str
+    doi: Optional[str]
     abstract: Optional[str]
-    url: str
+    url: Optional[str]
 
 class SearchResponse(BaseModel):
     #request: SearchRequest

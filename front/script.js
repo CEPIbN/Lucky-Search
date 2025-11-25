@@ -27,16 +27,18 @@ function collectSearchData() {
     
     return {
         query: document.getElementById('search-input').value.trim(),
-        authors: document.getElementById('filter-authors').value.trim() || null,
-        journal_title: document.getElementById('filter-journal').value.trim() || null,
-        article_title: document.getElementById('filter-title').value.trim() || null,
-        year_from: document.getElementById('filter-year-from').value.trim() || null,
-        year_to: document.getElementById('filter-year-to').value.trim() || null,
-        article_text: document.getElementById('filter-entire-text').value.trim(),
-        abstract: document.getElementById('filter-abstract').value.trim(),
-        affiliation: document.getElementById('filter-affiliation').value.trim(),
-        authors_count: authors_count,
-        collaboration_countries: collaboration_countries
+        filters: {
+            authors: document.getElementById('filter-authors').value.trim() || null,
+            journal_title: document.getElementById('filter-journal').value.trim() || null,
+            article_title: document.getElementById('filter-title').value.trim() || null,
+            year_from: document.getElementById('filter-year-from').value.trim() || null,
+            year_to: document.getElementById('filter-year-to').value.trim() || null,
+            article_text: document.getElementById('filter-entire-text').value.trim() || null,
+            abstract: document.getElementById('filter-abstract').value.trim() || null,
+            affiliation: document.getElementById('filter-affiliation').value.trim() || null,
+            authors_count: authors_count || null,
+            collaboration_countries: collaboration_countries || null
+        }
     };
 }
 

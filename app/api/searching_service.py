@@ -1,8 +1,8 @@
-from typing import Dict, List
+from typing import Dict
 import time
 
 from app.DTO.Request.SearchRequest import SearchRequest
-from app.DTO.Response.SearchResponse import SearchResponse, Article
+from app.DTO.Response.SearchResponse import SearchResponse, Article, Author, CountryInfo
 from app.api.clients.crossref_client import CrossrefClient
 from app.api.clients.openAlex_client import OpenAlexClient
 from app.api.mappers.ModelParamMapper import ModelParamsMapper

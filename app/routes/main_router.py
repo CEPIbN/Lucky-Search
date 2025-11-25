@@ -17,6 +17,5 @@ router.mount("/static", StaticFiles(directory=HTML_DIR), name="static")
 
 @router.get("/", response_class=HTMLResponse)
 async def root():
-    #return {"message": "Hello, I'm Lucky-Search Service! See you later"}
     html_file = HTML_DIR / "index.html"
     return HTMLResponse(content=html_file.read_text(encoding="utf-8"))

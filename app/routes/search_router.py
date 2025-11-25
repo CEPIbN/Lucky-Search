@@ -32,57 +32,7 @@ async def search_articles(request: SearchRequest):
     """
     Расширенный поиск научных статей с фильтрацией по авторам, журналам, годам и другим параметрам.
     """
-    mock_articles = [
-        Article(
-            id="10.1234/example.2023",
-            title="Advanced Machine Learning Techniques in Healthcare",
-            authors=[
-                Author(
-                    name="Ivan",
-                    surname="Petrov",
-                    affiliation="Moscow State University",
-                    country="Russia",
-                    ror_id="05gq02967"
-                ),
-                Author(
-                    name="Wei",
-                    surname="Zhang",
-                    affiliation="Tsinghua University",
-                    country="China",
-                    ror_id="03n51xr89"
-                )
-            ],
-            year=2023,
-            journal_full="Journal of Artificial Intelligence Research",
-            journal_abbreviation="JAIR",
-            publisher="Springer",
-            citations=45,
-            annual_citations=15.0,
-            volume="15",
-            issue="2",
-            authors_count=2,
-            countries=[
-                {"code": "RUS", "name": "Russia", "organizations": ["Moscow State University"]},
-                {"code": "CHN", "name": "China", "organizations": ["Tsinghua University"]}
-            ],
-            doi="10.1234/example.2023",
-            abstract="This paper presents novel machine learning approaches for healthcare applications...",
-            url="https://dx.doi.org/10.1234/example.2023"
-        )
-    ]
-
     result = await main(request)
-    """"
-    return SearchResponse(
-        request=request,
-        articles=mock_articles,
-        total_results=1,
-        total_pages=1,
-        current_page=request.page,
-        page_size=request.page_size,
-        search_time_ms=52.1
-    )
-    """""
     return result
 
 @search_router.post("/analyze/doi", response_model=DOIAnalysisResponse, summary="Анализ статей по DOI")
