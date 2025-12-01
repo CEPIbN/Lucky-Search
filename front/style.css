@@ -20,6 +20,7 @@ header {
     margin-bottom: 30px;
     padding: 20px 0;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 h1 {
@@ -154,12 +155,15 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    table-layout: fixed;
+    word-wrap: break-word;
 }
 
 #results-table th, #results-table td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
+    word-wrap: break-word;
 }
 
 #results-table th {
@@ -237,4 +241,137 @@ main {
     #results-table th, #results-table td {
         padding: 8px;
     }
+}
+
+/* Темная тема */
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+.dark-theme .container {
+    background-color: #2d2d2d;
+}
+
+.dark-theme header {
+    border-bottom: 1px solid #444;
+}
+
+.dark-theme h1 {
+    color: #fff;
+}
+
+.dark-theme .subtitle {
+    color: #bbb;
+}
+
+.dark-theme main {
+    background: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .search-bar input {
+    background-color: #444;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.dark-theme .search-button {
+    background-color: #4a86e8;
+}
+
+.dark-theme .search-button:hover {
+    background-color: #3a76d8;
+}
+
+.dark-theme .filter-toggle {
+    color: #4a86e8;
+}
+
+.dark-theme .filters-content {
+    background: #444;
+}
+
+.dark-theme .filter-group label {
+    color: #ddd;
+}
+
+.dark-theme .filter-group input, 
+.dark-theme .filter-group select {
+    background-color: #444;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.dark-theme .results-section h2,
+.dark-theme .analysis-section h2 {
+    color: #fff;
+}
+
+.dark-theme #results-table {
+    color: #e0e0e0;
+}
+
+.dark-theme #results-table th {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-theme #results-table th:hover {
+    background-color: #555;
+}
+
+.dark-theme #results-table tbody tr:nth-child(even) {
+    background-color: #444;
+}
+
+.dark-theme #results-table tbody tr:hover {
+    background-color: #555;
+}
+
+.dark-theme #results-table th,
+.dark-theme #results-table td {
+    border: 1px solid #555;
+}
+
+.dark-theme #analysis-input {
+    background-color: #444;
+    border: 1px solid #555;
+    color: #fff;
+}
+
+.dark-theme #analysis-results {
+    background-color: #444;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid #3498db;
+    color: #3498db;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.dark-theme .theme-toggle {
+    border: 1px solid #4a86e8;
+    color: #4a86e8;
+}
+
+.theme-toggle:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.dark-theme .theme-toggle:hover {
+    background-color: #4a86e8;
+    color: white;
+}
+
+.theme-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }

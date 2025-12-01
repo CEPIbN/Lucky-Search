@@ -298,7 +298,42 @@ function initializeEventListeners() {
     }
 }
 
+// Функция для переключения темы
+function toggleTheme() {
+    const body = document.body;
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    body.classList.toggle('dark-theme');
+    
+    // Сохраняем выбор темы в localStorage
+    if (body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+        themeToggle.textContent = 'Светлая тема';
+    } else {
+        localStorage.setItem('theme', 'light');
+        themeToggle.textContent = 'Тёмная тема';
+    }
+}
+
+// Функция для установки темы при загрузке страницы
+function setInitialTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = 'Светлая тема';
+    }
+}
+
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
+    setInitialTheme();
     initializeEventListeners();
+    
+    // Добавляем обработчик для переключения темы
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
 });
