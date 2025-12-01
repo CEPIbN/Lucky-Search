@@ -63,28 +63,32 @@ function showLoading(isLoading, buttonId) {
         button.textContent = 'Загрузка...';
     } else {
         button.disabled = false;
-        button.textContent = buttonId === 'search-articles-btn' ? 'Искать статьи' : 'Анализировать DOI';
+        button.textContent = buttonId === 'search-articles-btn' ? 'Искать' : 'Анализировать';
     }
 }
 
 // Функция для отображения ошибок
-function showError(message) {
+function showError(message, containerId = 'results-container') {
     // Создаем элемент для отображения ошибки
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
-    errorDiv.style.color = 'black';
+    errorDiv.style.color = 'red';
     errorDiv.style.margin = '10px 0';
+    errorDiv.style.padding = '10px';
+    errorDiv.style.border = '1px solid red';
+    errorDiv.style.borderRadius = '4px';
+    errorDiv.style.backgroundColor = '#ffe6e6';
     
-    // Добавляем ошибку в контейнер результатов поиска
-    const resultsContainer = document.getElementById('results-container');
+    // Добавляем ошибку в указанный контейнер
+    const container = document.getElementById(containerId);
     // Удаляем предыдущие ошибки, если есть
-    const existingError = resultsContainer.querySelector('.error-message');
+    const existingError = container.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
     }
     
-    resultsContainer.insertBefore(errorDiv, resultsContainer.firstChild);
+    container.insertBefore(errorDiv, container.firstChild);
 }
 
 // Функция для отображения результатов поиска в таблице
@@ -95,7 +99,7 @@ function displaySearchResults(articles) {
     if (!articles || articles.length === 0) {
         const row = tbody.insertRow();
         const cell = row.insertCell(0);
-        cell.colSpan = 12;
+        cell.colSpan = 8;
         cell.textContent = 'Результаты не найдены';
         cell.style.textAlign = 'center';
         return;
@@ -114,16 +118,12 @@ function displaySearchResults(articles) {
             article.publisher || '',
             article.citations || '',
             article.annual_citations || '',
-            article.volume || '',
-            article.issue || '',
-            article.authors_count || '',
-            (article.countries && Array.isArray(article.countries)) ? article.countries.map(c => c.name).join(', ') : '',
-            article.doi || ''
+            article.doi ? `<a href="https://doi.org/${article.doi}" target="_blank">${article.doi}</a>` : ''
         ];
         
         fields.forEach(field => {
             const cell = row.insertCell();
-            cell.textContent = field;
+            cell.innerHTML = field;
         });
     });
 }
@@ -220,7 +220,7 @@ async function searchArticles() {
         displaySearchResults(results.articles);
     } catch (error) {
         console.error('Ошибка при поиске статей:', error);
-        showError(error.message);
+        showError(error.message, 'results-container');
     } finally {
         // Скрываем состояние загрузки
         showLoading(false, 'search-articles-btn');
@@ -258,11 +258,17 @@ async function analyzeDoi() {
         displayDoiAnalysisResults(results);
     } catch (error) {
         console.error('Ошибка при анализе DOI:', error);
-        showError(error.message);
+        showError(error.message, 'analysis-results');
     } finally {
         // Скрываем состояние загрузки
         showLoading(false, 'analyze-doi-btn');
     }
+}
+
+// Функция для переключения видимости фильтров
+function toggleFilters() {
+    const filtersContent = document.getElementById('filters-content');
+    filtersContent.classList.toggle('active');
 }
 
 // Функция для инициализации обработчиков событий
@@ -284,23 +290,15 @@ function initializeEventListeners() {
             analyzeDoi();
         });
     }
+    
+    // Обработчик для кнопки переключения фильтров
+    const toggleButton = document.getElementById('toggle-filters');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', toggleFilters);
+    }
 }
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     initializeEventListeners();
-    
-    // Добавляем базовые стили для сообщений об ошибках
-    const style = document.createElement('style');
-    style.textContent = `
-        .error-message {
-            color: white;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid black;
-            border-radius: 4px;
-            background-color: #f7f7f7ff;
-        }
-    `;
-    document.head.appendChild(style);
 });

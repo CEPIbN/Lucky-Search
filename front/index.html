@@ -12,111 +12,111 @@
 </head>
 <body>
     <div class="container">
-        <h1>Lucky Search</h1>
+        <header>
+            <h1>Lucky Search</h1>
+            <p class="subtitle">Поиск научных публикаций</p>
+        </header>
 
-        <div class="search-area">
-            <h2>1. Основной Поиск</h2>
-
-            <div class="main-query-bar">
-                <input type="text" id="search-input" placeholder="Введите запрос, DOI, или URL статьи" required>
-                <button id="search-articles-btn" class="search-button">Искать статьи</button>
-            </div>
-
-            <h3>Настраиваемые фильтры</h3>
-            <div class="filters-grid">
-                <div class="filter-group">
-                    <label for="filter-authors">Авторы (ФИО)</label>
-                    <input type="text" id="filter-authors">
+        <main>
+            <section class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Введите запрос, DOI, или URL статьи" required>
+                    <button id="search-articles-btn" class="search-button">Искать</button>
                 </div>
+                
+                <div class="advanced-filters">
+                    <button id="toggle-filters" class="filter-toggle">Дополнительные фильтры</button>
+                    <div id="filters-content" class="filters-content">
+                        <div class="filters-grid">
+                            <div class="filter-group">
+                                <label for="filter-authors">Авторы (ФИО)</label>
+                                <input type="text" id="filter-authors">
+                            </div>
 
-                <div class="filter-group">
-                    <label for="filter-journal">Журнал / ISSN</label>
-                    <input type="text" id="filter-journal">
-                </div>
+                            <div class="filter-group">
+                                <label for="filter-journal">Журнал / ISSN</label>
+                                <input type="text" id="filter-journal">
+                            </div>
 
-                <div class="filter-group">
-                    <label for="filter-title">Название статьи (Title)</label>
-                    <input type="text" id="filter-title" placeholder="Ключевые слова из заголовка">
-                </div>
+                            <div class="filter-group">
+                                <label for="filter-title">Название статьи (Title)</label>
+                                <input type="text" id="filter-title" placeholder="Ключевые слова из заголовка">
+                            </div>
 
-                <div class="filter-group">
-                    <label>Диапазон годов</label>
-                    <div class="year-range-group">
-                        <input type="number" id="filter-year-from" placeholder="С года">
-                        <input type="number" id="filter-year-to" placeholder="По год">
+                            <div class="filter-group">
+                                <label>Диапазон годов</label>
+                                <div class="year-range-group">
+                                    <input type="number" id="filter-year-from" placeholder="С года">
+                                    <input type="number" id="filter-year-to" placeholder="По год">
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="filter-entire-text">По всей статье</label>
+                                <input type="text" id="filter-entire-text" placeholder="Текст из основного тела статьи">
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="filter-abstract">Аннотация (Abstract)</label>
+                                <input type="text" id="filter-abstract" placeholder="Ключевые слова из аннотации">
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="filter-affiliation">Аффилиация</label>
+                                <input type="text" id="filter-affiliation" placeholder="Напр. Moscow State University">
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="filter-author-number">Число авторов</label>
+                                <input type="number" id="filter-author-number" placeholder="Точное или минимальное число">
+                            </div>
+
+                            <div class="filter-group">
+                                <label for="filter-countries">Коллаборации (до 4 стран)</label>
+                                <input type="text" id="filter-countries" placeholder="Напр. Russia, China, USA (через запятую)">
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="filter-group">
-                    <label for="filter-entire-text">По всей статье</label>
-                    <input type="text" id="filter-entire-text" placeholder="Текст из основного тела статьи">
+            <section class="results-section">
+                <h2>Результаты Поиска</h2>
+                <div id="results-container">
+                    <p>Результаты появятся здесь после выполнения запроса.</p>
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th data-key="title">Название статьи</th>
+                                <th data-key="authors">Авторы</th>
+                                <th data-key="year">Год</th>
+                                <th data-key="journal">Журнал</th>
+                                <th data-key="publisher">Издатель</th>
+                                <th data-key="citations">Цитирование</th>
+                                <th data-key="annual_citations">Среднегодовое цитирование</th>
+                                <th data-key="doi">DOI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
+            </section>
 
-                <div class="filter-group">
-                    <label for="filter-abstract">Аннотация (Abstract)</label>
-                    <input type="text" id="filter-abstract" placeholder="Ключевые слова из аннотации">
+            <section class="analysis-section">
+                <h2>Анализ DOI</h2>
+                <form id="analysis-form">
+                    <div class="analysis-form-content">
+                        <input type="text" id="analysis-input" placeholder="Введите один или несколько DOI для анализа, разделенных запятой" required>
+                        <button type="submit" class="search-button" id="analyze-doi-btn">Анализировать</button>
+                    </div>
+                </form>
+
+                <div id="analysis-results">
+                    <p>Результаты анализа появятся здесь.</p>
                 </div>
-
-                <div class="filter-group">
-                    <label for="filter-affiliation">Аффилиация</label>
-                    <input type="text" id="filter-affiliation" placeholder="Напр. Moscow State University">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-author-number">Число авторов</label>
-                    <input type="number" id="filter-author-number" placeholder="Точное или минимальное число">
-                </div>
-
-                <div class="filter-group">
-                    <label for="filter-countries">Коллаборации (до 4 стран)</label>
-                    <input type="text" id="filter-countries" placeholder="Напр. Russia, China, USA (через запятую)">
-                </div>
-            </div>
-        </div>
-
-        <hr />
-
-        <h2>2. Результаты Поиска</h2>
-        <div id="results-container">
-            <p>Результаты появятся здесь после выполнения запроса. Таблица будет содержать колонки для сортировки.</p>
-
-            <table id="results-table">
-                <thead>
-                    <tr>
-                        <th data-key="title">Название статьи</th>
-                        <th data-key="authors">Авторы</th>
-                        <th data-key="year">Год</th>
-                        <th data-key="journal">Журнал</th>
-                        <th data-key="publisher">Издатель (Скрыть/Показать)</th>
-                        <th data-key="citations">Цитирование</th>
-                        <th data-key="annual_citations">Среднегодовое цитирование</th>
-                        <th data-key="volume">Том</th>
-                        <th data-key="issue">Выпуск</th>
-                        <th data-key="author_count">Число авторов</th>
-                        <th data-key="countries">Страны (Rus, Chin/Rus)</th>
-                        <th data-key="doi">DOI</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-
-        <hr />
-
-        <div id="analysis-area">
-            <h2>Анализ DOI</h2>
-            <form id="analysis-form">
-                <div id="analysis-form-content">
-                    <input type="text" id="analysis-input" placeholder="Введите один или несколько DOI для анализа, разделенных запятой (напр., 10.1000/j.a.b, 10.2000/x.y.z)" required>
-                    <button type="submit" class="search-button" id="analyze-doi-btn">Анализировать DOI</button>
-                </div>
-            </form>
-
-            <div id="analysis-results">
-                <p>Результаты анализа появятся здесь.</p>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
     <script src="/static/script.js"></script>
 </body>
