@@ -353,6 +353,9 @@ body.dark-theme {
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .dark-theme .theme-toggle {
@@ -368,6 +371,11 @@ body.dark-theme {
 .dark-theme .theme-toggle:hover {
     background-color: #4a86e8;
     color: white;
+}
+
+.theme-icon {
+    width: 16px;
+    height: 16px;
 }
 
 .theme-switcher {

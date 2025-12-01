@@ -302,27 +302,36 @@ function initializeEventListeners() {
 function toggleTheme() {
     const body = document.body;
     const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
     
     body.classList.toggle('dark-theme');
     
     // Сохраняем выбор темы в localStorage
     if (body.classList.contains('dark-theme')) {
         localStorage.setItem('theme', 'dark');
-        themeToggle.textContent = 'Светлая тема';
+        themeText.textContent = 'Светлая тема';
+        themeIcon.src = '/static/sun.png';
     } else {
         localStorage.setItem('theme', 'light');
-        themeToggle.textContent = 'Тёмная тема';
+        themeText.textContent = 'Тёмная тема';
+        themeIcon.src = '/static/moon.png';
     }
 }
 
 // Функция для установки темы при загрузке страницы
 function setInitialTheme() {
     const savedTheme = localStorage.getItem('theme');
-    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
     
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
-        themeToggle.textContent = 'Светлая тема';
+        themeText.textContent = 'Светлая тема';
+        themeIcon.src = '/static/sun.png';
+    } else {
+        themeText.textContent = 'Тёмная тема';
+        themeIcon.src = '/static/moon.png';
     }
 }
 
