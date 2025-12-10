@@ -5,3 +5,9 @@ __pycache__/
 *.pyo
 /.vs/Lucky-search/FileContentIndex
 /.vs/slnx.sqlite
+.terraform.lock.hcl
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+
