@@ -1,6 +1,6 @@
 variable "ycr_token" {
   description = "OAuth-токен для доступа к Yandex Container Registry"
-  type        = stringe
+  type        = string
 }
 
 variable "ycr_image_path" {
