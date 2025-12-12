@@ -1,3 +1,4 @@
+# Создание провайдера для Yandex Cloud
 terraform {
   required_providers {
     yandex = {
@@ -13,7 +14,7 @@ provider "yandex" {
   folder_id = var.folder_id
 }
 
-# Локальные переменные
+# Переменные для проверки, существует ли vpc. Создание контейнеров в ВМ.
 locals {
   vpc_id = var.use_existing_vpc ? "id-существующей-vpc" : yandex_vpc_network.ls-vpc[0].id
   
@@ -31,7 +32,7 @@ locals {
   
 }
 
-# VPC & Subnets
+# Создание VPC и подсетей
 resource "yandex_vpc_network" "ls-vpc" {
   name  = "ls-network"
   count = var.use_existing_vpc ? 0 : 1
@@ -58,7 +59,7 @@ resource "yandex_vpc_subnet" "ls-subnet-d" {
   v4_cidr_blocks = ["10.0.3.0/24"]
 }
 
-# Compute instance group
+# Compute Группы ВМ
 data "yandex_compute_image" "ubuntu" {
   family = "ubuntu-2204-lts"
 }
@@ -123,7 +124,7 @@ resource "yandex_compute_instance_group" "lucky-search-group" {
 
 }
 
-# ALB target and backend group
+# Создание ALB балансировщика
 resource "yandex_alb_target_group" "alb_target_group" {
   name = "alb-target-group"
 

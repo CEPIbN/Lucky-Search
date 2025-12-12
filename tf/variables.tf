@@ -1,3 +1,8 @@
+variable "ycr_token" {
+  description = "OAuth-токен для доступа к Yandex Container Registry"
+  type        = stringe
+}
+
 variable "ycr_image_path" {
   description = "Путь к образу в Yandex Container Registry"
   type        = string
@@ -10,23 +15,23 @@ variable "sa_id" {
 }
 
 variable "yc_token" {
-  description = "Yandex Cloud OAuth token"
+  description = "Yandex Cloud IAM token"
   type        = string
   sensitive   = true
 }
 
 variable "cloud_id" {
-  description = "Yandex Cloud ID"
+  description = "ID Облака"
   type        = string
 }
 
 variable "folder_id" {
-  description = "Yandex Cloud Folder ID"
+  description = "ID Каталога"
   type        = string
 }
 
 variable "use_existing_vpc" {
-  description = "Whether to use existing VPC"
+  description = "Существует ли VPC сеть"
   type        = bool
   default     = false
 }
@@ -38,13 +43,11 @@ variable "existing_vpc_id" {
 }
 
 variable "ip_address_id" {  
-  description = "Static IP address ID"
+  description = "Статический IP-адрес, для ALB"
   type        = string
 }
 
 variable "ssl_id" {
-  description = "SSL certificate ID"
+  description = "ID SSL-сертификата"
   type        = string
 }
-
-variable "ycr_token" {}

@@ -1,0 +1,9 @@
+ycr_token = "OAuth-токен"
+yc_token     = "IAM-токен"
+cloud_id     = "ID Облака"
+folder_id    = "ID Каталога"
+ip_address_id = "Статический IP-адрес" 
+ssl_id = "ID SSL-сертификата"
+ycr_image_path = "ID_реестра/Название_образа"
+sa_id = "ID_сервисного_аккаунта"
+use_existing_vpc = false  

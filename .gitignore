@@ -5,6 +5,8 @@ __pycache__/
 *.pyo
 /.vs/Lucky-search/FileContentIndex
 /.vs/slnx.sqlite
+*.app/api/mappers/__pycache__/__init__.cpython-311.pyc
+*.app\api\mappers\__pycache__\ModelParamMapper.cpython-311.pyc
 .terraform.lock.hcl
 .terraform/
 terraform.tfstate
