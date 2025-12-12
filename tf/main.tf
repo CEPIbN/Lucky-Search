@@ -135,7 +135,7 @@ resource "yandex_alb_target_group" "alb_target_group" {
 }
 
 resource "yandex_alb_backend_group" "bg" {
-  name = "market-backend-group"
+  name = "ls-backend-group"
 
   http_backend {
     name             = "http-backend"
@@ -158,11 +158,11 @@ resource "yandex_alb_backend_group" "bg" {
 }
 
 resource "yandex_alb_http_router" "router" {
-  name = "market-router"
+  name = "ls-router"
 }
 
 resource "yandex_alb_virtual_host" "vhost" {
-  name           = "market-vhost"
+  name           = "ls-vhost"
   http_router_id = yandex_alb_http_router.router.id
 
   route {
@@ -177,7 +177,7 @@ resource "yandex_alb_virtual_host" "vhost" {
 }
 
 resource "yandex_alb_load_balancer" "alb" {
-  name       = "market-alb"
+  name       = "ls-alb"
   network_id = local.vpc_id
 
   allocation_policy {
