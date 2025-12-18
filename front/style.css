@@ -164,6 +164,8 @@ main {
     padding: 12px;
     text-align: left;
     word-wrap: break-word;
+    max-height: 100px;
+    overflow: hidden;
 }
 
 #results-table th {

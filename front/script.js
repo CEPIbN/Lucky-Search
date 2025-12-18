@@ -216,6 +216,12 @@ async function searchArticles() {
         
         const results = await response.json();
         
+        // Удаляем сообщение об ошибке, если оно было
+        const errorDiv = document.querySelector('#results-container .error-message');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+        
         // Отображаем результаты
         displaySearchResults(results.articles);
     } catch (error) {
