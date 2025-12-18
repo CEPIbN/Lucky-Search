@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from fastapi import APIRouter
 
 from app.DTO.Request.SearchRequest import SearchRequest
-from app.DTO.Response.SearchResponse import SearchResponse, Article, Author
+from app.DTO.Response.SearchResponse import SearchResponse
 from app.api.searching_service import main
 
 search_router = APIRouter(prefix="/api/v1/search")
