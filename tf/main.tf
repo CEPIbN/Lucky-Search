@@ -81,7 +81,7 @@ resource "yandex_compute_instance_group" "lucky-search-group" {
       initialize_params {
         image_id = data.yandex_compute_image.ubuntu.id
         size     = 33 
-        type     = "network-ssd"
+        type     = "network-hdd"
       }
     }
 
