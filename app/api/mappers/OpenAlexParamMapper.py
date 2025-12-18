@@ -1,6 +1,7 @@
-from app.DTO.Request.SearchRequest import SearchRequest
+from typing import Dict, Any
+from app.api.mappers.ParamMapper import ParamMapper
 
-class ModelParamsMapper:
+class OpenAlexParamMapper(ParamMapper):
     """Модуль для сопоставления входящих параметров с атрибутами OpenAlex и crossref API"""
 
     # Словарь маппинга: внешний_параметр -> openAlex_атрибут
@@ -63,68 +64,40 @@ class ModelParamsMapper:
     }
 
     @classmethod
-    def map_parameters(cls, user_params):
-        openalex_params = dict()
-        for key, value in user_params.items():
-            if key == "filters":
-                cls.map_filters(value, openalex_params)
-            else:
-                openalex_params[cls.DIRECT_PARAMS.get(key)] = value
+    def map_parameters(cls, user_params : Dict[str, Any]):
+        """Основной метод преобразования параметров"""
+        openalex_params = {}
+
+        # Обрабатываем query
+        if 'query' in user_params and user_params['query']:
+            openalex_key = cls.map_param('query', cls.DIRECT_PARAMS)
+            openalex_params[openalex_key] = user_params['query']
+
+        # Фильтры
+        if 'filters' in user_params and user_params['filters']:
+            cls._map_filters(user_params['filters'], openalex_params)
+
+        # Обрабатываем пагинацию
+        if 'page' in user_params and 'page_size' in user_params:
+            page = user_params.get('page', 1)
+            per_page = min(user_params.get('page_size'), 200)
+            openalex_params[cls.map_param('page', cls.DIRECT_PARAMS)] = page
+            openalex_params[cls.map_param('page_size', cls.DIRECT_PARAMS)] = per_page
 
         return openalex_params
 
     @classmethod
-    def map_from_model(cls, model_instance: SearchRequest):
-        params = model_instance.model_dump(exclude_none=True, mode='json')
-        print(params.get("filters", {}))
-        return cls.map_parameters(params)
-
-    @classmethod
-    def map_filter(cls, key: str, filter_value):
-        if key not in cls.FILTER_FIELD_MAPPING:
-            return None
-
-        if key.startswith("year"):
-            filters = [cls.map_date(key, int(filter_value))]
-
-        # Обрабатываем список (например, collaboration_countries)
-        elif isinstance(filter_value, list):
-            # Фильтруем пустые значения
-            filters = [item.strip() for item in filter_value if item and item.strip()]
-            # Если список пустой, возвращаем пустую строку
-            if not filters:
-                return ""
-
-        # Обрабатываем строку (стандартный случай)
-        elif isinstance(filter_value, str):
-            # Фильтруем пустые значения
-            filters = [item.strip() for item in filter_value.split(',') if item and item.strip()]
-            # Если список пустой, возвращаем пустую строку
-            if not filters:
-                return ""
-
-        # Обрабатываем другие типы (числа и т.д.)
-        else:
-            # Проверяем, что значение не None
-            if filter_value is None:
-                return ""
-            filters = [str(filter_value)]
-            
-        return f"{cls.FILTER_FIELD_MAPPING.get(key)}:{'|'.join(filters)}"
-
-    @classmethod
-    def map_date(cls , key: str, year: int):
-        if key.endswith("from"):
-            return f"{year}-01-01"
-        return f"{year}-12-31"
-
-    @classmethod
-    def map_filters(cls, filters_dict: dict, openalex_params: dict):
+    def _map_filters(cls, filters_dict: Dict[str, Any], openalex_params: Dict[str, Any]):
         filters = []
         for key, value in filters_dict.items():
-            filter_result = cls.map_filter(key, value)
-            if filter_result:
-                filters.append(filter_result)
+            if value is None:
+                continue
+
+            if key in cls.FILTER_FIELD_MAPPING:
+                map_key = cls.map_param(key, cls.FILTER_FIELD_MAPPING)
+                filter_result = cls._map_filter(map_key, value)
+                if filter_result:
+                    filters.append(filter_result)
 
         if filters:
             openalex_params["filter"] = ','.join(filters)

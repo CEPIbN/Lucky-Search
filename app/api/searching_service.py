@@ -1,62 +1,81 @@
-from typing import Dict
+from typing import Dict, Any
 import time
+import asyncio
 
 from app.DTO.Request.SearchRequest import SearchRequest
 from app.DTO.Response.SearchResponse import SearchResponse, Article, Author, CountryInfo
 from app.api.clients.crossref_client import CrossrefClient
 from app.api.clients.openAlex_client import OpenAlexClient
-from app.api.mappers.ModelParamMapper import ModelParamsMapper
+from app.api.mappers.CrossrefParamMapper import CrossrefParamMapper
+from app.api.mappers.OpenAlexParamMapper import OpenAlexParamMapper
+from app.api.mappers.ParamMapper import ParamMapper
 
+
+
+def map_from_model(mapper: ParamMapper, model_instance: SearchRequest) -> Dict[str, Any]:
+    params = model_instance.model_dump(exclude_none=True, mode='json')
+    return mapper.map_parameters(params)
 
 async def main(request: SearchRequest) -> SearchResponse:
     start_time = time.time()
-    openalex_results = await open_alex_search(request)
-    #crossref_results = await crossref_search(request)
-    
+
+    # Создаем задачи
+    tasks = {
+        #"openalex": asyncio.create_task(open_alex_search(request)),
+        "crossref": asyncio.create_task(crossref_search(request)),
+    }
+
+    # Ждем все задачи
+    results = await asyncio.gather(*tasks.values())
+
+    # Собираем результаты с именами источников
+    final_results = {}
+    for source, result in zip(tasks.keys(), results):
+        final_results[source] = result  # result - это список словарей
+
+    # Использование:
+    #openalex_data = final_results["openalex"]  # список словарей
+    crossref_data = final_results["crossref"]  # список словарей
+
     # Преобразуем результаты в формат Article
-    articles = [_normalize_article(item) for item in openalex_results]
-    
+    #articles_openalex = [_normalize_article(item) for item in openalex_data]
+    articles_crossref = [_normalize_article(item)
+                         for item in crossref_data
+                         if not request.filters.authors_count
+                         or len(item.get("authors", [])) == request.filters.authors_count]
+
     # Рассчитываем время выполнения
     search_time_ms = (time.time() - start_time) * 1000
-    
+
     # Создаем объект ответа
     response = SearchResponse(
-        articles=articles,
-        total_results=len(articles),
+        articles=articles_crossref,
+        total_results=len(articles_crossref),
         total_pages=1,  # Для простоты предполагаем 1 страницу
         current_page=request.page,
         page_size=request.page_size,
         search_time_ms=search_time_ms
     )
-    
+
     return response
 
 async def open_alex_search(request: SearchRequest):
-    map_params = ModelParamsMapper.map_from_model(request)
+    max_results = request.model_copy().max_results
+
+    map_params = map_from_model(OpenAlexParamMapper, request)
     client = OpenAlexClient()
-    results = await client.search_works(map_params)
+    results = await client.search_works(map_params, max_results)
     await client.close()
     return results
 
-async def crossref_search(query:str, params:dict[str, str], rows: int):
-    map_params = get_params(params.copy())
-    map_params.update({"query": query})
-    map_params.update({"rows": rows})
+async def crossref_search(request: SearchRequest):
+    max_results = request.model_copy().max_results
+
+    map_params = map_from_model(CrossrefParamMapper, request)
     client = CrossrefClient()
-    results = await client.search_works(map_params)
+    results = await client.search_works(map_params, max_results)
     await client.close()
     return results
-
-def get_filters(filters: Dict[str, str]):
-    if filters:
-        filter_parts = []
-        for field, value in filters.items():
-            print(f"{field}:{value}")
-            filter_parts.append(f"{field}:{value}")
-        return ",".join(filter_parts)
-
-def get_params(params: dict[str, str]) -> dict[str, object]:
-    return { f"query.{key}": value for key, value in params.items() }
 
 def _normalize_article(item: Dict) -> Article:
     """Преобразует данные из OpenAlex в формат Article"""

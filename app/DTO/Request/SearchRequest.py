@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator, ValidationInfo
+from pydantic import BaseModel, Field
 
 
 def current_year():
@@ -48,20 +48,6 @@ class Filters(BaseModel):
     affiliation: Optional[str] = Field(None, description="Аффилиация")
     collaboration_countries: Optional[List[str]] = Field(None, max_length=4, description="Коллаборации стран (макс. 4)")
 
-    '''@field_validator('collaboration_countries')
-    @classmethod
-    def validate_collaboration_countries(cls, v):
-        if v is not None and len(v) > 4:
-            raise ValueError('Максимум 4 страны для коллаборации')
-        return v'''
-
-    @field_validator('year_to')
-    @classmethod
-    def validate_year_range(cls, v, info: ValidationInfo):
-        if v is not None and info.data.get('year_from') is not None and v < info.data['year_from']:
-            raise ValueError('Год "до" не может быть меньше года "от"')
-        return v
-
 class SearchRequest(BaseModel):
     # Основные параметры поиска
     query: str = Field(description="Поисковый запрос")
@@ -77,4 +63,5 @@ class SearchRequest(BaseModel):
     #sort_order: SortOrder = Field(SortOrder.DESC, description="Порядок сортировки")
 
     page: Optional[int] = Field(1, ge=1, description="Номер страницы")
-    page_size: Optional[int] = Field(5, ge=1, le=100, description="Размер страницы")
+    page_size: Optional[int] = Field(5, ge=1, le=200, description="Размер страницы")
+    max_results: Optional[int] = Field(15, description="Максимальное кол-во результатов")
